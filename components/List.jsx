@@ -75,7 +75,10 @@ const List = () => {
 
     // list of categories
     return (
-      <TouchableOpacity style={styles.progressCard}>
+      <TouchableOpacity
+        style={styles.progressCard}
+        onPress={() => router.push("/(dua)")}
+      >
         <AppText weight="Medium" style={{ marginBottom: 15 }}>
           {item.name}
         </AppText>
@@ -120,18 +123,26 @@ const List = () => {
           </View>
         }
       />
+
+      {/* POP UP MODAL */}
       <Modal isOpen={isOpen}>
+        {/* MODAL CONTAINER */}
         <View style={styles.modalStyle}>
+          {/* MODAL HEADER CONTAINER */}
           <View style={styles.modalHeader}>
             <AppText weight="Bold" style={{ fontSize: 18, marginBottom: 10 }}>
               Create a new category
             </AppText>
+            {/* MODAL HEADER EXIT BURRON*/}
             <TouchableOpacity onPress={() => setIsOpen(false)}>
               <Ionicons name="close-outline" size={28} color="red" />
             </TouchableOpacity>
           </View>
+
+          {/* INPUT FIELD */}
           <InputField label="Name of Category" placeholder="Friday prayer" />
 
+          {/* MODAL BUTTON */}
           <TouchableOpacity
             activeOpacity={0.7}
             style={{

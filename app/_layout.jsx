@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -16,11 +17,13 @@ export default function RootLayout() {
   if (!loaded) return null; // prevent flashing with fallback fonts
 
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} initialRouteName="(tabs)">
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(dua)" />
-      </Stack>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <Stack screenOptions={{ headerShown: false }} initialRouteName="(tabs)">
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(dua)" />
+        </Stack>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

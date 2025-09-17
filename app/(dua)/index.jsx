@@ -1,10 +1,10 @@
-import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import DuaList from "../../components/DuaList";
 
 const createDuaFolder = () => {
   return (
-    <SafeAreaView>
-      <Text>createDuaFolder</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <DuaList />
     </SafeAreaView>
   );
 };
