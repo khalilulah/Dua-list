@@ -123,8 +123,10 @@ const DuaList = () => {
       </View>
 
       {bottomForm && (
-        <BottomSheets>
-          <AppText>Create a new Dua</AppText>
+        <BottomSheets setBottomForm={setBottomForm}>
+          <AppText weight="Bold" style={{ marginBottom: 30 }}>
+            Create a new Dua
+          </AppText>
         </BottomSheets>
       )}
     </>

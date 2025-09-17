@@ -41,6 +41,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  BottomSheetTextInputContainer: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    marginBottom: 10,
+  },
+  BottomSheetTextInput: {
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 5,
+    width: "100%",
+  },
+  BottomSheetTextInputMultiLines: {
+    height: 150,
+    borderWidth: 1,
+    borderRadius: 15,
+    width: "100%",
+  },
 });
 
 export default styles;
