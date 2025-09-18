@@ -1,67 +1,51 @@
 import styles from "@/assets/styles/duaList.styles";
 import AppText from "@/components/AppText";
 import COLORS from "@/constants/colors";
+import useCategoryStore from "@/store/useCategoryStore";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
+
 import BottomSheets from "./BottomSheet";
-const duaList = [
-  {
-    title: "Al-Fateha",
-    amoutOfTimes: 1,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "forgiveness",
-    amoutOfTimes: 1,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "protection",
-    amoutOfTimes: 1,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "Ayatal Kursi",
-    amoutOfTimes: 1,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "Alif Laam Meem",
-    amoutOfTimes: 1,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "Al Iklas",
-    amoutOfTimes: 3,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-  {
-    title: "Laa ik'raaha fid-deen",
-    amoutOfTimes: 5,
-    ArabicText: "",
-    translation: "",
-    translitration: "",
-  },
-];
-const extendedList = [...duaList, { id: "add_new", addCategory: true }];
 
 const DuaList = () => {
+  const { categoryId } = useLocalSearchParams();
   const [bottomForm, setBottomForm] = useState(false);
+
+  // Store
+  const {
+    categories,
+    prayers,
+    loadCategories,
+    getPrayersForCategory,
+    updateCategoryProgress,
+  } = useCategoryStore();
+
+  // Load data on mount
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  // Update progress when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      updateCategoryProgress();
+    }, [])
+  );
+
+  // Get current category and its prayers
+  const currentCategory = categories.find((cat) => cat.id === categoryId);
+  const categoryPrayers = getPrayersForCategory(categoryId);
+
+  // Add "add new" item to the list
+  const extendedList = [
+    ...categoryPrayers,
+    { id: "add_new", addCategory: true },
+  ];
+
   const renderitems = ({ item }) => {
-    //add dua box
+    // Add dua box
     if (item.addCategory) {
       return (
         <TouchableOpacity
@@ -76,12 +60,23 @@ const DuaList = () => {
       );
     }
 
-    // list of dua
+    // List of dua
     return (
-      <TouchableOpacity style={styles.item}>
-        <AppText weight="Medium" style={{ marginBottom: 15 }}>
-          {item.title}
-        </AppText>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => {
+          // Navigate to prayer details screen
+          // router.push(`/prayer/${item.id}`);
+        }}
+      >
+        <View>
+          <AppText weight="Medium" style={{ marginBottom: 5 }}>
+            {item.title}
+          </AppText>
+          <AppText style={{ fontSize: 12, color: "gray" }}>
+            {item.currentCount}/{item.numberOfTimes} times
+          </AppText>
+        </View>
         <Ionicons
           name="chevron-forward"
           size={20}
@@ -91,12 +86,13 @@ const DuaList = () => {
       </TouchableOpacity>
     );
   };
+
   return (
     <>
       <View style={styles.FlatListContainer}>
         <View style={styles.listHeader}>
           <AppText weight="Bold" style={{}}>
-            Name of category
+            {currentCategory?.name || "Category"}
           </AppText>
           <TouchableOpacity>
             <Ionicons
@@ -106,27 +102,30 @@ const DuaList = () => {
             />
           </TouchableOpacity>
         </View>
+
         <FlatList
           data={extendedList}
           renderItem={renderitems}
           showsVerticalScrollIndicator={false}
           numColumns={1}
-          keyExtractor={(item, index) => item.id ?? index.toString()}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatListStyle}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
-            <View style={{}}>
+            <View style={styles.addDua}>
               <Ionicons name="add-outline" size={50} color={COLORS.primary} />
+              <AppText>No prayers yet</AppText>
             </View>
           }
         />
       </View>
 
       {bottomForm && (
-        <BottomSheets setBottomForm={setBottomForm}>
+        <BottomSheets setBottomForm={setBottomForm} categoryId={categoryId}>
           <AppText weight="Bold" style={{ marginBottom: 30 }}>
             Create a new Dua
           </AppText>
+          {/* Add your form fields here */}
         </BottomSheets>
       )}
     </>

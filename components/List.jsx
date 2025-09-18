@@ -3,9 +3,10 @@ import AppText from "@/components/AppText";
 import InputField from "@/components/InputField";
 import Modal from "@/components/ModalComponent";
 import COLORS from "@/constants/colors";
+import useCategoryStore from "@/store/useCategoryStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -14,37 +15,18 @@ import {
   View,
 } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
-const duaGroup = [
-  {
-    name: "Bedtime",
-    progress: 30,
-  },
-  {
-    name: "Bedtime",
-    progress: 30,
-  },
-  {
-    name: "Morning",
-    progress: 20,
-  },
-  {
-    name: "Travel",
-    progress: 60,
-  },
-
-  {
-    name: "Jannah",
-    progress: 57,
-  },
-  {
-    name: "My Parents",
-    progress: 100,
-  },
-];
 
 const List = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const categories = useCategoryStore((state) => state.categories);
+  const addCategory = useCategoryStore((state) => state.addCategory);
+  const loadCategories = useCategoryStore((state) => state.loadCategories);
+  const [newCategory, setNewCategory] = useState("");
+
+  useEffect(() => {
+    loadCategories(); // fetch categories on mount
+  }, []);
 
   // Get screen dimensions
   const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -57,7 +39,7 @@ const List = () => {
   };
 
   // list of categories including the "add item"
-  const extendedData = [...duaGroup, { id: "add_new", addCategory: true }];
+  const extendedData = [...categories, { id: "add_new", addCategory: true }];
 
   // renderItem
   const renderitems = ({ item }) => {
@@ -77,7 +59,7 @@ const List = () => {
     return (
       <TouchableOpacity
         style={styles.progressCard}
-        onPress={() => router.push("/(dua)")}
+        onPress={() => router.push(`/(dua)?categoryId=${item.id}`)}
       >
         <AppText weight="Medium" style={{ marginBottom: 15 }}>
           {item.name}
@@ -140,7 +122,12 @@ const List = () => {
           </View>
 
           {/* INPUT FIELD */}
-          <InputField label="Name of Category" placeholder="Friday prayer" />
+          <InputField
+            label="Name of Category"
+            placeholder="Friday prayer"
+            value={newCategory}
+            onChangeText={setNewCategory}
+          />
 
           {/* MODAL BUTTON */}
           <TouchableOpacity
@@ -152,6 +139,14 @@ const List = () => {
               paddingVertical: 5,
               borderRadius: 5,
               backgroundColor: COLORS.primary,
+            }}
+            // check this out
+            onPress={() => {
+              if (newCategory.trim()) {
+                addCategory(newCategory.trim());
+                setNewCategory("");
+                setIsOpen(false);
+              }
             }}
           >
             <AppText style={{ color: "white", fontSize: 13 }}>
