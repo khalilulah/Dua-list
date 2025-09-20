@@ -8,6 +8,14 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
   },
+  menuContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    width: "100%",
+  },
   titleContainer: {
     alignItems: "center",
     marginBottom: 30,

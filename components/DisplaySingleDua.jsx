@@ -2,6 +2,7 @@ import styles from "@/assets/styles/singlePrayer.styles";
 import AppText from "@/components/AppText";
 import COLORS from "@/constants/colors";
 import useCategoryStore from "@/store/useCategoryStore";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -11,6 +12,12 @@ import {
   Vibration,
   View,
 } from "react-native";
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from "react-native-popup-menu";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheets from "./BottomSheet";
 
@@ -41,20 +48,6 @@ const DisplaySingleDua = () => {
     }
   };
 
-  //handles delete
-  const handleDeletePrayer = (prayerId) => {
-    Alert.alert("delete prayer", "Are you sure you want to delete?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: () => {
-          return deletePrayer(prayerId);
-        },
-      },
-    ]);
-    router.back();
-  };
-
   // handles reset counter
   const handleLongPress = () => {
     Vibration.vibrate(40);
@@ -67,48 +60,64 @@ const DisplaySingleDua = () => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: 10,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.primary,
-              width: 70,
-              height: 30,
-              borderRadius: 10,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingBottom: 10,
-            }}
-            onPress={() => setEditForm(true)}
-          >
-            <AppText>Edit</AppText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.primary,
-              width: 70,
-              height: 30,
-              borderRadius: 10,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingBottom: 10,
-            }}
-            onPress={() => handleDeletePrayer(currentPrayer?.id)}
-          >
-            <AppText>Delete</AppText>
-          </TouchableOpacity>
-        </View>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Prayer Title */}
           <View style={styles.titleContainer}>
-            <AppText weight="Bold" style={styles.title}>
-              {currentPrayer?.title}
-            </AppText>
+            <View style={styles.menuContainer}>
+              <AppText weight="Bold" style={styles.title}>
+                {currentPrayer?.title}
+              </AppText>
+              <Menu>
+                <MenuTrigger>
+                  <Ionicons
+                    name="ellipsis-vertical"
+                    size={18}
+                    color={COLORS.primary}
+                  />
+                </MenuTrigger>
+                <MenuOptions
+                  customStyles={{
+                    optionsContainer: {
+                      padding: 8,
+                      borderRadius: 8,
+                      backgroundColor: "white",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.2,
+                      shadowRadius: 4,
+                      elevation: 5,
+                    },
+                  }}
+                >
+                  {/* delete option */}
+                  <MenuOption
+                    onSelect={() =>
+                      Alert.alert(
+                        "Delete Prayer",
+                        "Are you sure you want to delete this Prayer?",
+                        [
+                          { text: "Cancel", style: "cancel" },
+                          {
+                            text: "Delete",
+                            style: "destructive",
+                            onPress: () => {
+                              deletePrayer(prayerId);
+                              router.back();
+                            },
+                          },
+                        ]
+                      )
+                    }
+                    text="Delete Category"
+                  />
+                  {/* edit option */}
+                  <MenuOption
+                    onSelect={() => setEditForm(true)}
+                    text="Edit Prayer"
+                  />
+                </MenuOptions>
+              </Menu>
+            </View>
+
             <AppText style={styles.counter}>
               {currentPrayer?.currentCount}/{currentPrayer?.numberOfTimes} times
             </AppText>

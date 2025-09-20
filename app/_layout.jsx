@@ -1,6 +1,7 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { MenuProvider } from "react-native-popup-menu";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -18,12 +19,17 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }} initialRouteName="(tabs)">
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(dua)" />
-        </Stack>
-      </SafeAreaProvider>
+      <MenuProvider>
+        <SafeAreaProvider>
+          <Stack
+            screenOptions={{ headerShown: false }}
+            initialRouteName="(tabs)"
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(dua)" />
+          </Stack>
+        </SafeAreaProvider>
+      </MenuProvider>
     </GestureHandlerRootView>
   );
 }

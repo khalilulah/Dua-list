@@ -6,6 +6,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, TouchableOpacity, View } from "react-native";
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 import BottomSheets from "./BottomSheet";
 
@@ -17,6 +23,7 @@ const DuaList = () => {
   const categories = useCategoryStore((state) => state.categories);
   const loadCategories = useCategoryStore((state) => state.loadCategories);
   const deletePrayer = useCategoryStore((state) => state.deletePrayer);
+  const deleteCategory = useCategoryStore((state) => state.deleteCategory);
   const updateCategoryProgress = useCategoryStore(
     (state) => state.updateCategoryProgress
   );
@@ -104,15 +111,52 @@ const DuaList = () => {
           <AppText weight="Bold" style={{}}>
             {currentCategory?.name || "Category"}
           </AppText>
-          <TouchableOpacity>
-            <Ionicons
-              name="ellipsis-vertical"
-              size={18}
-              color={COLORS.primary}
-            />
-          </TouchableOpacity>
+          <Menu>
+            <MenuTrigger>
+              <Ionicons
+                name="ellipsis-vertical"
+                size={18}
+                color={COLORS.primary}
+              />
+            </MenuTrigger>
+            <MenuOptions
+              customStyles={{
+                optionsContainer: {
+                  padding: 8,
+                  borderRadius: 8,
+                  backgroundColor: "white",
+                  shadowColor: "#000",
+                  shadowOpacity: 0.2,
+                  shadowRadius: 4,
+                  elevation: 5,
+                },
+              }}
+            >
+              <MenuOption
+                onSelect={() =>
+                  Alert.alert(
+                    "Delete Category",
+                    "Are you sure you want to delete this category?",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Delete",
+                        style: "destructive",
+                        onPress: () => {
+                          deleteCategory(categoryId);
+                          router.back();
+                        },
+                      },
+                    ]
+                  )
+                }
+                text="Delete Category"
+              />
+            </MenuOptions>
+          </Menu>
         </View>
 
+        {/* flat list */}
         <FlatList
           data={extendedList}
           renderItem={renderitems}
