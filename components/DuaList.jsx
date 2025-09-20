@@ -5,6 +5,7 @@ import useCategoryStore from "@/store/useCategoryStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import BottomSheets from "./BottomSheet";
@@ -12,15 +13,16 @@ import BottomSheets from "./BottomSheet";
 const DuaList = () => {
   const { categoryId } = useLocalSearchParams();
   const [bottomForm, setBottomForm] = useState(false);
-
+  const router = useRouter();
   // Store
-  const {
-    categories,
-    prayers,
-    loadCategories,
-    getPrayersForCategory,
-    updateCategoryProgress,
-  } = useCategoryStore();
+  const categories = useCategoryStore((state) => state.categories);
+  const loadCategories = useCategoryStore((state) => state.loadCategories);
+  const updateCategoryProgress = useCategoryStore(
+    (state) => state.updateCategoryProgress
+  );
+  const getPrayersForCategory = useCategoryStore(
+    (state) => state.getPrayersForCategory
+  );
 
   // Load data on mount
   useEffect(() => {
@@ -66,7 +68,7 @@ const DuaList = () => {
         style={styles.item}
         onPress={() => {
           // Navigate to prayer details screen
-          // router.push(`/prayer/${item.id}`);
+          router.push(`/(dua)/singlePrayer?prayerId=${item.id}`);
         }}
       >
         <View>

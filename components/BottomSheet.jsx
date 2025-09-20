@@ -34,7 +34,11 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
       return;
     }
 
-    if (!formData.numberOfTimes || parseInt(formData.numberOfTimes) < 1) {
+    if (
+      !formData.numberOfTimes ||
+      isNaN(parseInt(formData.numberOfTimes, 10)) ||
+      parseInt(formData.numberOfTimes, 10) < 1
+    ) {
       alert("Please enter a valid number of times");
       return;
     }
@@ -128,14 +132,14 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Translitration(Option)</AppText>
+          <AppText style={{ fontSize: 13 }}>Transliteration(Option)</AppText>
           <BottomSheetTextInput
             placeholderTextColor="gray"
             placeholder="Enter Translitration....."
             style={styles.BottomSheetTextInputMultiLines}
             multiline
             value={formData.transliteration}
-            onChangeText={(text) => updateField("translitration", text)}
+            onChangeText={(text) => updateField("transliteration", text)}
           />
         </View>
 

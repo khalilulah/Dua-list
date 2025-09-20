@@ -69,6 +69,10 @@ const useCategoryStore = create((set, get) => ({
   getPrayersForCategory: (categoryId) => {
     return get().prayers.filter((prayer) => prayer.categoryId === categoryId);
   },
+  // Get prayers for a category
+  getPrayer: (prayerId) => {
+    return get().prayers.find((prayer) => prayer.id === prayerId);
+  },
 
   // Update prayer counter
   updatePrayerCount: async (prayerId, newCount) => {
