@@ -9,26 +9,32 @@ import { useMemo, useRef, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import styles from "../assets/styles/duaList.styles";
 
-const BottomSheets = ({ children, setBottomForm, categoryId }) => {
+const BottomSheets = ({
+  children,
+  setBottomForm,
+  categoryId,
+  mode = "create",
+  prayer,
+}) => {
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["20%", "80%", "100%"], []);
 
   const [formData, setFormData] = useState({
-    title: "",
-    numberOfTimes: "",
-    arabicText: "",
-    translation: "",
-    transliteration: "",
+    title: prayer?.title || "",
+    numberOfTimes: prayer?.numberOfTimes?.toString() || "",
+    arabicText: prayer?.arabicText || "",
+    translation: prayer?.translation || "",
+    transliteration: prayer?.transliteration || "",
   });
 
   const addPrayer = useCategoryStore((state) => state.addPrayer);
+  const updatePrayer = useCategoryStore((state) => state.updatePrayer);
 
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCreatePrayer = async () => {
-    // Validation
+  const handleSubmit = async () => {
     if (!formData.title.trim()) {
       alert("Please enter a title");
       return;
@@ -43,55 +49,45 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
       return;
     }
 
-    // At least one of the optional fields must be filled
     if (
       !formData.arabicText.trim() &&
       !formData.translation.trim() &&
       !formData.transliteration.trim()
     ) {
       alert(
-        "Please fill at least one of: Arabic Text, Translation, or Transliteration"
+        "Please fill at least one of: Arabic, Translation, or Transliteration"
       );
       return;
     }
 
-    // Create prayer
-    await addPrayer(categoryId, {
-      title: formData.title.trim(),
-      numberOfTimes: parseInt(formData.numberOfTimes),
-      arabicText: formData.arabicText.trim(),
-      translation: formData.translation.trim(),
-      transliteration: formData.transliteration.trim(),
-    });
+    if (mode === "create") {
+      await addPrayer(categoryId, {
+        title: formData.title.trim(),
+        numberOfTimes: parseInt(formData.numberOfTimes),
+        arabicText: formData.arabicText.trim(),
+        translation: formData.translation.trim(),
+        transliteration: formData.transliteration.trim(),
+      });
+    } else if (mode === "edit" && prayer?.id) {
+      await updatePrayer(prayer.id, {
+        ...formData,
+        numberOfTimes: parseInt(formData.numberOfTimes),
+      });
+    }
 
-    // Reset form and close
-    setFormData({
-      title: "",
-      numberOfTimes: "",
-      arabicText: "",
-      translation: "",
-      transliteration: "",
-    });
     setBottomForm(false);
   };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={0}
-      snapPoints={snapPoints}
-      containerStyle={{}}
-    >
-      <BottomSheetScrollView
-        contentContainerStyle={{
-          padding: 20,
-        }}
-      >
+    <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
+      <BottomSheetScrollView contentContainerStyle={{ padding: 20 }}>
+        {/* Header (e.g. "Create Dua" or "Edit Dua") */}
         {children}
+
+        {/* Fields */}
         <View style={styles.BottomSheetTextInputContainer}>
           <AppText style={{ fontSize: 13 }}>Title</AppText>
           <BottomSheetTextInput
-            placeholder="Fard"
             style={styles.BottomSheetTextInput}
             value={formData.title}
             onChangeText={(text) => updateField("title", text)}
@@ -99,9 +95,8 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Number Of times</AppText>
+          <AppText style={{ fontSize: 13 }}>Number of times</AppText>
           <BottomSheetTextInput
-            placeholder="1000"
             style={styles.BottomSheetTextInput}
             value={formData.numberOfTimes}
             onChangeText={(text) => updateField("numberOfTimes", text)}
@@ -110,9 +105,8 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Arabic Text(optional)</AppText>
+          <AppText style={{ fontSize: 13 }}>Arabic Text</AppText>
           <BottomSheetTextInput
-            placeholder="Enter Arabic Text....."
             style={styles.BottomSheetTextInputMultiLines}
             multiline
             value={formData.arabicText}
@@ -121,9 +115,8 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Translation(Optional)</AppText>
+          <AppText style={{ fontSize: 13 }}>Translation</AppText>
           <BottomSheetTextInput
-            placeholder="Enter Translation....."
             style={styles.BottomSheetTextInputMultiLines}
             multiline
             value={formData.translation}
@@ -132,10 +125,8 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Transliteration(Option)</AppText>
+          <AppText style={{ fontSize: 13 }}>Transliteration</AppText>
           <BottomSheetTextInput
-            placeholderTextColor="gray"
-            placeholder="Enter Translitration....."
             style={styles.BottomSheetTextInputMultiLines}
             multiline
             value={formData.transliteration}
@@ -144,18 +135,19 @@ const BottomSheets = ({ children, setBottomForm, categoryId }) => {
         </View>
 
         <TouchableOpacity
-          onPress={handleCreatePrayer}
-          activeOpacity={0.7}
+          onPress={handleSubmit}
           style={{
             marginTop: 15,
             alignItems: "center",
             justifyContent: "center",
-            paddingVertical: 5,
-            borderRadius: 5,
+            paddingVertical: 10,
+            borderRadius: 8,
             backgroundColor: COLORS.primary,
           }}
         >
-          <AppText>Create new dua</AppText>
+          <AppText weight="Bold" style={{ color: "white" }}>
+            {mode === "create" ? "Create Dua" : "Save Changes"}
+          </AppText>
         </TouchableOpacity>
       </BottomSheetScrollView>
     </BottomSheet>

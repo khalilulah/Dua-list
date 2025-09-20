@@ -127,6 +127,38 @@ const useCategoryStore = create((set, get) => ({
     }
   },
 
+  // Delete prayer
+  deletePrayer: async (prayerId) => {
+    const updatedPrayers = get().prayers.filter((p) => p.id !== prayerId);
+    set({ prayers: updatedPrayers });
+    await AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers));
+    get().updateCategoryProgress();
+  },
+
+  // Delete category and its prayers
+  deleteCategory: async (categoryId) => {
+    const updatedCategories = get().categories.filter(
+      (c) => c.id !== categoryId
+    );
+    const updatedPrayers = get().prayers.filter(
+      (p) => p.categoryId !== categoryId
+    );
+    set({ categories: updatedCategories, prayers: updatedPrayers });
+    await Promise.all([
+      AsyncStorage.setItem("categories", JSON.stringify(updatedCategories)),
+      AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers)),
+    ]);
+  },
+
+  // Update prayer
+  updatePrayer: async (prayerId, updatedData) => {
+    const updatedPrayers = get().prayers.map((p) =>
+      p.id === prayerId ? { ...p, ...updatedData } : p
+    );
+    set({ prayers: updatedPrayers });
+    await AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers));
+  },
+
   // Reset (optional helper)
   clearCategories: async () => {
     try {

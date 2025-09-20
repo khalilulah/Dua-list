@@ -3,10 +3,9 @@ import AppText from "@/components/AppText";
 import COLORS from "@/constants/colors";
 import useCategoryStore from "@/store/useCategoryStore";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "expo-router";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, TouchableOpacity, View } from "react-native";
 
 import BottomSheets from "./BottomSheet";
 
@@ -17,6 +16,7 @@ const DuaList = () => {
   // Store
   const categories = useCategoryStore((state) => state.categories);
   const loadCategories = useCategoryStore((state) => state.loadCategories);
+  const deletePrayer = useCategoryStore((state) => state.deletePrayer);
   const updateCategoryProgress = useCategoryStore(
     (state) => state.updateCategoryProgress
   );
@@ -46,6 +46,13 @@ const DuaList = () => {
     { id: "add_new", addCategory: true },
   ];
 
+  const handleDeletePrayer = (prayerId) => {
+    Alert.alert("delete parayer", "Are you sure you want to delete?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", onPress: () => deletePrayer(prayerId) },
+    ]);
+  };
+
   const renderitems = ({ item }) => {
     // Add dua box
     if (item.addCategory) {
@@ -70,6 +77,7 @@ const DuaList = () => {
           // Navigate to prayer details screen
           router.push(`/(dua)/singlePrayer?prayerId=${item.id}`);
         }}
+        onLongPress={() => handleDeletePrayer(item.id)}
       >
         <View>
           <AppText weight="Medium" style={{ marginBottom: 5 }}>
