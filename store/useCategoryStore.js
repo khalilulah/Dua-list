@@ -20,6 +20,18 @@ const useCategoryStore = create((set, get) => ({
     }
   },
 
+  // Load prayers from storage
+  loadPrayers: async () => {
+    try {
+      const stored = await AsyncStorage.getItem("prayers");
+      if (stored) {
+        set({ prayers: JSON.parse(stored) });
+      }
+    } catch (error) {
+      console.error("Error loading prayers:", error);
+    }
+  },
+
   // Add new category
   addCategory: async (name) => {
     try {

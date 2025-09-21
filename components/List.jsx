@@ -22,10 +22,12 @@ const List = () => {
   const categories = useCategoryStore((state) => state.categories);
   const addCategory = useCategoryStore((state) => state.addCategory);
   const loadCategories = useCategoryStore((state) => state.loadCategories);
+  const loadPrayers = useCategoryStore((state) => state.loadPrayers);
   const [newCategory, setNewCategory] = useState("");
 
   useEffect(() => {
-    loadCategories(); // fetch categories on mount
+    loadCategories();
+    loadPrayers(); // fetch categories on mount
   }, []);
 
   // Get screen dimensions

@@ -22,6 +22,7 @@ const DuaList = () => {
   // Store
   const categories = useCategoryStore((state) => state.categories);
   const loadCategories = useCategoryStore((state) => state.loadCategories);
+  const loadPrayers = useCategoryStore((state) => state.loadPrayers);
   const deletePrayer = useCategoryStore((state) => state.deletePrayer);
   const deleteCategory = useCategoryStore((state) => state.deleteCategory);
   const updateCategoryProgress = useCategoryStore(
@@ -34,6 +35,7 @@ const DuaList = () => {
   // Load data on mount
   useEffect(() => {
     loadCategories();
+    loadPrayers();
   }, []);
 
   // Update progress when screen comes into focus
