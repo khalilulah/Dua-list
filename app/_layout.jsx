@@ -21,10 +21,8 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MenuProvider>
         <SafeAreaProvider>
-          <Stack
-            screenOptions={{ headerShown: false }}
-            initialRouteName="(tabs)"
-          >
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="(dua)" />
           </Stack>
