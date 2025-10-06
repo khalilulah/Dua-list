@@ -1,12 +1,12 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const profile = () => {
+const library = () => {
   return (
     <SafeAreaView>
-      <Text>profile</Text>
+      <Text>library</Text>
     </SafeAreaView>
   );
 };
 
-export default profile;
+export default library;
