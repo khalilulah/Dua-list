@@ -12,7 +12,7 @@ import Animated, {
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Customize button size for clamping
-const BUTTON_SIZE = 80; // adjust to match styles.counterButton dimensions
+const BUTTON_SIZE = 80;
 
 const MovableCounterButton = ({
   currentPrayer,
