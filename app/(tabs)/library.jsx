@@ -1,10 +1,12 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LibraryComponent from "../../components/LibraryComponent";
 
 const library = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ marginHorizontal: 30 }}>
       <Text>library</Text>
+      <LibraryComponent />
     </SafeAreaView>
   );
 };
