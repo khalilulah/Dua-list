@@ -12,7 +12,7 @@ const singleLibraryDhikr = () => {
   const prayerSlug = useCategoryStore((state) => state.prayerSlug);
   const fetchDhikrId = useCategoryStore((state) => state.fetchDhikrId);
 
-  // invoke the fetch function
+  // load the dhikr on initial page load
   useEffect(() => {
     fetchDhikrId(dhikrId, prayerSlug);
   }, []);

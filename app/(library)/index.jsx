@@ -6,17 +6,18 @@ import { useCategoryStore } from "../../store/useDhikrSrore";
 
 const SelectedSlug = () => {
   const { prayerSlug } = useLocalSearchParams();
+  const router = useRouter();
   const categoryItems = useCategoryStore((state) => state.categoryItems);
   const fetchDhikrSlug = useCategoryStore((state) => state.fetchDhikrSlug);
   const loading = useCategoryStore((state) => state.loading);
   const setPrayerSlug = useCategoryStore((state) => state.setPrayerSlug);
-  const router = useRouter();
 
-  // invoke the fetch function
+  // load the prayerSlug on initial page load
   useEffect(() => {
     fetchDhikrSlug(prayerSlug);
   }, []);
 
+  //update the value of prayerSlug anytime the slug changes
   useEffect(() => {
     if (prayerSlug) setPrayerSlug(prayerSlug);
   }, [prayerSlug]);
@@ -24,6 +25,7 @@ const SelectedSlug = () => {
   const handleSelectedDhikr = (dhikrId) => {
     router.push(`/(library)/singleLibraryDhikr?dhikrId=${dhikrId}`);
   };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSelectedDhikr(item.id)}>
       <View style={{ marginBottom: 20 }}>
