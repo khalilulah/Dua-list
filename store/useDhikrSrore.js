@@ -30,4 +30,29 @@ export const useCategoryStore = create((set) => ({
       set({ loading: false });
     }
   },
+
+  fetchDhikrId: async (dhikrId, prayerSlug) => {
+    set({ loading: true });
+    try {
+      const response = await fetch(
+        `${BASE_URL}/categories/${prayerSlug}/${dhikrId}`,
+        {
+          headers: {
+            "Accept-Language": "en",
+          },
+        }
+      );
+
+      if (!response.ok)
+        throw new Error(data.message || "Failed to fetch books");
+      const data = await response.json();
+      console.log(data.data);
+
+      set({ dhikr: data.data });
+    } catch (error) {
+      console.log("error fetching dhikr", error);
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));

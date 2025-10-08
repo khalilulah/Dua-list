@@ -1,43 +1,20 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BASE_URL } from "../../constants/api";
 import { useCategoryStore } from "../../store/useDhikrSrore";
 
 const singleLibraryDhikr = () => {
   const { dhikrId } = useLocalSearchParams();
-  const [dhikr, setDhikr] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const loading = useCategoryStore((state) => state.loading);
+  const dhikr = useCategoryStore((state) => state.dhikr);
   const prayerSlug = useCategoryStore((state) => state.prayerSlug);
-
-  const fetchDhikrSlug = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/categories/${prayerSlug}/${dhikrId}`,
-        {
-          headers: {
-            "Accept-Language": "en",
-          },
-        }
-      );
-
-      if (!response.ok)
-        throw new Error(data.message || "Failed to fetch books");
-      const data = await response.json();
-      console.log(data.data);
-
-      setDhikr(data.data);
-    } catch (error) {
-      console.log("error fetching dhikr", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchDhikrId = useCategoryStore((state) => state.fetchDhikrId);
 
   // invoke the fetch function
   useEffect(() => {
-    fetchDhikrSlug();
+    fetchDhikrId(dhikrId, prayerSlug);
   }, []);
 
   if (loading) return <Text>Loading...</Text>;
