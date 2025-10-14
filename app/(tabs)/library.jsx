@@ -5,7 +5,7 @@ import LibraryComponent from "../../components/LibraryComponent";
 const library = () => {
   return (
     <SafeAreaView style={{ marginHorizontal: 30 }}>
-      <Text>library</Text>
+      <Text>libraryy</Text>
       <LibraryComponent />
     </SafeAreaView>
   );

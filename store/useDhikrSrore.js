@@ -48,7 +48,15 @@ export const useCategoryStore = create((set) => ({
       const data = await response.json();
       console.log(data.data);
 
-      set({ dhikr: data.data });
+      const duaData = data.data; // single object
+      let count = 1;
+
+      if (duaData.notes) {
+        const match = duaData.notes.match(/\d+/);
+        if (match) count = parseInt(match[0]);
+      }
+
+      set({ dhikr: { ...duaData, count } });
     } catch (error) {
       console.log("error fetching dhikr", error);
     } finally {

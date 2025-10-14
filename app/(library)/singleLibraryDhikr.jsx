@@ -26,6 +26,7 @@ const singleLibraryDhikr = () => {
           <Text style={{ marginTop: 20 }}>{dhikr.latin}</Text>
           <Text style={{ marginTop: 20 }}>{dhikr.translation}</Text>
           <Text style={{ marginTop: 20 }}>{dhikr.source}</Text>
+          <Text style={{ marginTop: 20 }}>Number of time: {dhikr.count}X</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

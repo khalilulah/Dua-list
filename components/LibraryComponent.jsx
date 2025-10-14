@@ -1,12 +1,26 @@
+import styles from "@/assets/styles/textInput.styles";
 import { BASE_URL } from "@/constants/api";
+import COLORS from "@/constants/colors";
+import useCategoryStore from "@/store/useCategoryStore";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Button,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const LibraryComponent = () => {
   const [duaLibrary, setDuaLibrary] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const categories = useCategoryStore((state) => state.categories);
+  const addCategory = useCategoryStore((state) => state.addCategory);
   const [timeoutError, setTimeoutError] = useState(false);
 
   //fetch data
@@ -46,6 +60,31 @@ const LibraryComponent = () => {
     fetchDua();
   }, []);
 
+  console.log(categories);
+
+  const handleAdd = (itemId) => {
+    const compareCategoryName = categories.find(
+      (category) => category.name.toLowerCase() === itemId
+    );
+    setIsOpen(true);
+    Alert.alert("Add to category", "Do you want to add to Category?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Yes, Add",
+        onPress: () => {
+          if (!compareCategoryName) {
+            addCategory(itemId);
+            router.replace("/(tabs)");
+          } else {
+            Alert.alert("Exsiting Group", "The group already", [
+              { text: "Cancel", style: "cancel" },
+            ]);
+          }
+        },
+      },
+    ]);
+  };
+
   const handleSelectedDhikr = (dhikrSlug) => {
     router.push(`/(library)?prayerSlug=${dhikrSlug}`);
   };
@@ -56,6 +95,12 @@ const LibraryComponent = () => {
         <Text>{item.slug}</Text>
         <Text>{item.total}</Text>
       </View>
+      <TouchableOpacity
+        style={styles.progressCard}
+        onPress={() => handleAdd(item.slug)}
+      >
+        <Ionicons name="add-outline" size={30} color={COLORS.primary} />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
   if (loading) return <Text>Loading...</Text>;

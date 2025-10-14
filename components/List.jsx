@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
   FlatList,
   Text,
@@ -21,6 +22,7 @@ const List = () => {
   const [isOpen, setIsOpen] = useState(false);
   const categories = useCategoryStore((state) => state.categories);
   const addCategory = useCategoryStore((state) => state.addCategory);
+  const deleteCategory = useCategoryStore((state) => state.deleteCategory);
   const loadCategories = useCategoryStore((state) => state.loadCategories);
   const loadPrayers = useCategoryStore((state) => state.loadPrayers);
   const [newCategory, setNewCategory] = useState("");
@@ -43,6 +45,19 @@ const List = () => {
   // list of categories including the "add item"
   const extendedData = [...categories, { id: "add_new", addCategory: true }];
 
+  const handleDeleteCategory = (categoryId) => {
+    Alert.alert(
+      "Delete Category",
+      "Are you sure you want to Delete this Category?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          onPress: () => deleteCategory(categoryId),
+        },
+      ]
+    );
+  };
   // renderItem
   const renderitems = ({ item }) => {
     //add category box
@@ -62,6 +77,7 @@ const List = () => {
       <TouchableOpacity
         style={styles.progressCard}
         onPress={() => router.push(`/(dua)?categoryId=${item.id}`)}
+        onLongPress={() => handleDeleteCategory(item.id)}
       >
         <AppText weight="Medium" style={{ marginBottom: 15 }}>
           {item.name}
