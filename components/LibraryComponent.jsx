@@ -20,7 +20,9 @@ const LibraryComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const categories = useCategoryStore((state) => state.categories);
-  const addCategory = useCategoryStore((state) => state.addCategory);
+  const addCategoryFromAPI = useCategoryStore(
+    (state) => state.addCategoryFromAPI
+  );
   const [timeoutError, setTimeoutError] = useState(false);
 
   //fetch data
@@ -62,7 +64,7 @@ const LibraryComponent = () => {
 
   console.log(categories);
 
-  const handleAdd = (itemId) => {
+  const handleAdd = (itemId, categoryName) => {
     const compareCategoryName = categories.find(
       (category) => category.name.toLowerCase() === itemId
     );
@@ -73,7 +75,7 @@ const LibraryComponent = () => {
         text: "Yes, Add",
         onPress: () => {
           if (!compareCategoryName) {
-            addCategory(itemId);
+            addCategoryFromAPI(itemId, categoryName);
             router.replace("/(tabs)");
           } else {
             Alert.alert("Exsiting Group", "The group already", [
@@ -90,14 +92,15 @@ const LibraryComponent = () => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectedDhikr(item.slug)}>
+    <TouchableOpacity onPress={() => handleSelectedDhikr(item.slug, item.name)}>
+      {console.log(item)}
       <View style={{ marginBottom: 20 }}>
         <Text>{item.slug}</Text>
         <Text>{item.total}</Text>
       </View>
       <TouchableOpacity
         style={styles.progressCard}
-        onPress={() => handleAdd(item.slug)}
+        onPress={() => handleAdd(item.slug, item.name)}
       >
         <Ionicons name="add-outline" size={30} color={COLORS.primary} />
       </TouchableOpacity>

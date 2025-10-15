@@ -88,8 +88,12 @@ const DuaList = () => {
         }}
         onLongPress={() => handleDeletePrayer(item.id)}
       >
-        <View>
-          <AppText weight="Medium" style={{ marginBottom: 5 }}>
+        <View style={{ width: "90%" }}>
+          <AppText
+            weight="Medium"
+            style={{ marginBottom: 5, width: "100%" }}
+            numberOfLines={1}
+          >
             {item.title}
           </AppText>
           <AppText style={{ fontSize: 12, color: "gray" }}>

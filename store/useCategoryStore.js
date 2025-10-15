@@ -1,8 +1,10 @@
 // stores/categoryStore.js
+import { BASE_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from "react-native-uuid";
 import { create } from "zustand";
 
-const generateId = () => Date.now().toString();
+const generateId = () => uuid.v4();
 
 const useCategoryStore = create((set, get) => ({
   categories: [],
@@ -178,6 +180,132 @@ const useCategoryStore = create((set, get) => ({
       set({ categories: [] });
     } catch (error) {
       console.error("Error clearing categories:", error);
+    }
+  },
+
+  addCategoryFromAPI: async (slug, categoryName, language = "en") => {
+    try {
+      // Step 1: Fetch list of items in the category
+      console.log(`Fetching: ${BASE_URL}/categories/${slug}`);
+      const listResponse = await fetch(`${BASE_URL}/categories/${slug}`, {
+        headers: {
+          "Accept-Language": language,
+          Accept: "application/json",
+        },
+      });
+
+      if (!listResponse.ok) {
+        throw new Error(`HTTP error! status: ${listResponse.status}`);
+      }
+
+      const listData = await listResponse.json();
+      const items = listData.data;
+
+      if (!items || items.length === 0) {
+        throw new Error("No items found in category");
+      }
+
+      // Step 2: Fetch complete details for all items in parallel with error handling
+      const detailPromises = items.map(async (item, index) => {
+        console.log(
+          `Fetching item ${index + 1}/${items.length}: ID ${item.id}`
+        );
+        try {
+          const res = await fetch(`${BASE_URL}/categories/${slug}/${item.id}`, {
+            headers: {
+              "Accept-Language": language,
+              Accept: "application/json",
+            },
+          });
+
+          console.log(`Item ${item.id} status: ${res.status}`);
+
+          if (!res.ok) {
+            console.warn(`Failed to fetch item ${item.id}: ${res.status}`);
+            console.warn(
+              `Failed to fetch item ${item.id}: ${res.status}`,
+              errorText.substring(0, 100)
+            );
+            return null; // Return null for failed requests
+          }
+
+          const data = await res.json();
+          console.log(`✓ Item ${item.id} fetched successfully`);
+          return data.data;
+        } catch (error) {
+          console.warn(`Error fetching item ${item.id}:`, error.message);
+          console.error(`✗ Error fetching item ${item.id}:`, error.message);
+          return null; // Return null for failed requests
+        }
+      });
+
+      const detailResponses = await Promise.all(detailPromises);
+
+      // Filter out undefined/null values from failed requests
+      const completeItems = detailResponses.filter(
+        (item) => item !== null && item !== undefined
+      );
+
+      console.log(
+        `Successfully fetched ${completeItems.length} out of ${items.length} items`
+      );
+
+      if (completeItems.length === 0) {
+        throw new Error("Failed to fetch any items for this category");
+      }
+
+      // Step 3: Create category
+      const newCategory = {
+        id: generateId(),
+        name: categoryName,
+        progress: 0,
+        apiSlug: slug,
+      };
+
+      // Step 4: Create prayers from API data
+      const newPrayers = completeItems.map((item) => ({
+        id: generateId(),
+        categoryId: newCategory.id,
+        title: item.title || "Untitled",
+        numberOfTimes: 1,
+        currentCount: 0,
+        arabicText: item.arabic || "",
+        translation: item.translation || "",
+        transliteration: item.latin || "",
+        notes: item.notes || "",
+        fawaid: item.fawaid || "",
+        source: item.source || "",
+      }));
+
+      // Step 5: Update store and storage
+      const updatedCategories = [...get().categories, newCategory];
+      const updatedPrayers = [...get().prayers, ...newPrayers];
+
+      set({
+        categories: updatedCategories,
+        prayers: updatedPrayers,
+      });
+
+      await Promise.all([
+        AsyncStorage.setItem("categories", JSON.stringify(updatedCategories)),
+        AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers)),
+      ]);
+
+      const message =
+        completeItems.length < items.length
+          ? `Category added with ${completeItems.length} out of ${items.length} items (some failed to load)`
+          : "Category added successfully!";
+
+      return {
+        success: true,
+        category: newCategory,
+        itemsAdded: completeItems.length,
+        totalItems: items.length,
+        message,
+      };
+    } catch (error) {
+      console.error("Error adding category from API:", error);
+      return { success: false, error: error.message };
     }
   },
 }));
