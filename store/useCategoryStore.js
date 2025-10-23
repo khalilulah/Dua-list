@@ -205,12 +205,20 @@ const useCategoryStore = create((set, get) => ({
         throw new Error("No items found in category");
       }
 
-      // Step 2: Fetch complete details for all items in parallel with error handling
-      const detailPromises = items.map(async (item, index) => {
-        console.log(
-          `Fetching item ${index + 1}/${items.length}: ID ${item.id}`
-        );
+      // Helper function: Creates a delay to prevent rate limiting
+      // The backend allows only 2 requests per second (500ms between requests)
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      // Step 2: Fetch complete details for each item SEQUENTIALLY (not in parallel)
+      // This prevents hitting the rate limit of 2 requests per second
+      const completeItems = [];
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        console.log(`Fetching item ${i + 1}/${items.length}: ID ${item.id}`);
+
         try {
+          // Fetch detailed data for this specific item
           const res = await fetch(`${BASE_URL}/categories/${slug}/${item.id}`, {
             headers: {
               "Accept-Language": language,
@@ -220,41 +228,43 @@ const useCategoryStore = create((set, get) => ({
 
           console.log(`Item ${item.id} status: ${res.status}`);
 
+          // If request failed (e.g., 429 rate limit or other errors)
           if (!res.ok) {
             console.warn(`Failed to fetch item ${item.id}: ${res.status}`);
-            console.warn(
-              `Failed to fetch item ${item.id}: ${res.status}`,
-              errorText.substring(0, 100)
-            );
-            return null; // Return null for failed requests
+            // Skip this item and continue with the next one
+            continue;
           }
 
+          // Parse the successful response
           const data = await res.json();
           console.log(`✓ Item ${item.id} fetched successfully`);
-          return data.data;
+
+          // Add the successfully fetched item to our collection
+          completeItems.push(data.data);
+
+          // Wait 500ms before the next request (2 requests per second = 500ms apart)
+          // Skip the delay after the last item (no need to wait)
+          if (i < items.length - 1) {
+            await delay(500);
+          }
         } catch (error) {
+          // If there's a network error or other exception, log it and continue
           console.warn(`Error fetching item ${item.id}:`, error.message);
-          console.error(`✗ Error fetching item ${item.id}:`, error.message);
-          return null; // Return null for failed requests
+          // The item is skipped, loop continues to next item
         }
-      });
+      }
 
-      const detailResponses = await Promise.all(detailPromises);
-
-      // Filter out undefined/null values from failed requests
-      const completeItems = detailResponses.filter(
-        (item) => item !== null && item !== undefined
-      );
-
+      // Log how many items we successfully retrieved
       console.log(
         `Successfully fetched ${completeItems.length} out of ${items.length} items`
       );
 
+      // If we couldn't fetch ANY items, abort the operation
       if (completeItems.length === 0) {
         throw new Error("Failed to fetch any items for this category");
       }
 
-      // Step 3: Create category
+      // Step 3: Create category object
       const newCategory = {
         id: generateId(),
         name: categoryName,
@@ -262,22 +272,36 @@ const useCategoryStore = create((set, get) => ({
         apiSlug: slug,
       };
 
-      // Step 4: Create prayers from API data
-      const newPrayers = completeItems.map((item) => ({
-        id: generateId(),
-        categoryId: newCategory.id,
-        title: item.title || "Untitled",
-        numberOfTimes: 1,
-        currentCount: 0,
-        arabicText: item.arabic || "",
-        translation: item.translation || "",
-        transliteration: item.latin || "",
-        notes: item.notes || "",
-        fawaid: item.fawaid || "",
-        source: item.source || "",
-      }));
+      // Step 4: Transform API data into prayer objects
+      const newPrayers = completeItems.map((item) => {
+        // Extract repetition count from notes field
+        // Notes come in format like "3x", "100x", "10x"
+        let numberOfTimes = 1; // Default to 1 if no count found
 
-      // Step 5: Update store and storage
+        if (item.notes) {
+          // Use regex to extract first number found in notes
+          const match = item.notes.match(/\d+/);
+          if (match) {
+            numberOfTimes = parseInt(match[0], 10);
+          }
+        }
+
+        return {
+          id: generateId(),
+          categoryId: newCategory.id,
+          title: item.title || "Untitled",
+          numberOfTimes: numberOfTimes, // Use extracted count
+          currentCount: 0,
+          arabicText: item.arabic || "",
+          translation: item.translation || "",
+          transliteration: item.latin || "",
+          notes: item.notes || "",
+          fawaid: item.fawaid || "",
+          source: item.source || "",
+        };
+      });
+
+      // Step 5: Update in-memory state
       const updatedCategories = [...get().categories, newCategory];
       const updatedPrayers = [...get().prayers, ...newPrayers];
 
@@ -286,11 +310,13 @@ const useCategoryStore = create((set, get) => ({
         prayers: updatedPrayers,
       });
 
+      // Step 6: Persist to AsyncStorage (local storage)
       await Promise.all([
         AsyncStorage.setItem("categories", JSON.stringify(updatedCategories)),
         AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers)),
       ]);
 
+      // Create appropriate success message
       const message =
         completeItems.length < items.length
           ? `Category added with ${completeItems.length} out of ${items.length} items (some failed to load)`

@@ -34,8 +34,7 @@ const LibraryComponent = () => {
     const timeout = setTimeout(() => {
       setTimeoutError(true);
       setLoading(false);
-    }, 10000); // 10 seconds
-
+    }, 10000);
     try {
       const response = await fetch(`${BASE_URL}/categories`, {
         headers: {
