@@ -1,6 +1,7 @@
 // stores/categoryStore.js
 import { BASE_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 import uuid from "react-native-uuid";
 import { create } from "zustand";
 
@@ -38,20 +39,30 @@ const useCategoryStore = create((set, get) => ({
   addCategory: async (name) => {
     try {
       if (!name?.trim()) return; // prevent empty names
-
-      const newCategory = {
-        id: generateId(),
-        name: name.trim(),
-        progress: 0,
-      };
-
-      const updatedCategories = [...get().categories, newCategory];
-      set({ categories: updatedCategories });
-
-      await AsyncStorage.setItem(
-        "categories",
-        JSON.stringify(updatedCategories)
+      const categories = get().categories;
+      const compareCategoryName = categories.find(
+        (category) => category.name.toLowerCase() === name.toLowerCase()
       );
+
+      if (!compareCategoryName) {
+        const newCategory = {
+          id: generateId(),
+          name: name.trim(),
+          progress: 0,
+        };
+
+        const updatedCategories = [...get().categories, newCategory];
+        set({ categories: updatedCategories });
+
+        await AsyncStorage.setItem(
+          "categories",
+          JSON.stringify(updatedCategories)
+        );
+      } else {
+        Alert.alert("Existing Group", "The group already exists", [
+          { text: "Cancel", style: "cancel" },
+        ]);
+      }
     } catch (error) {
       console.error("Error adding category:", error);
     }
@@ -183,7 +194,13 @@ const useCategoryStore = create((set, get) => ({
     }
   },
 
-  addCategoryFromAPI: async (slug, categoryName, language = "en") => {
+  addCategoryFromAPI: async (
+    slug,
+    categoryName,
+    language = "en",
+    onProgress = null, // Callback for progress updates
+    shouldCancel = null // Function that returns true if download should be cancelled
+  ) => {
     try {
       // Step 1: Fetch list of items in the category
       console.log(`Fetching: ${BASE_URL}/categories/${slug}`);
@@ -205,6 +222,11 @@ const useCategoryStore = create((set, get) => ({
         throw new Error("No items found in category");
       }
 
+      // Report total number of items to download
+      if (onProgress) {
+        onProgress(0, items.length);
+      }
+
       // Helper function: Creates a delay to prevent rate limiting
       // The backend allows only 2 requests per second (500ms between requests)
       const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -214,6 +236,12 @@ const useCategoryStore = create((set, get) => ({
       const completeItems = [];
 
       for (let i = 0; i < items.length; i++) {
+        // Check if download should be cancelled
+        if (shouldCancel && shouldCancel()) {
+          console.log("Download cancelled by user");
+          return { success: false, cancelled: true };
+        }
+
         const item = items[i];
         console.log(`Fetching item ${i + 1}/${items.length}: ID ${item.id}`);
 
@@ -231,6 +259,10 @@ const useCategoryStore = create((set, get) => ({
           // If request failed (e.g., 429 rate limit or other errors)
           if (!res.ok) {
             console.warn(`Failed to fetch item ${item.id}: ${res.status}`);
+            // Update progress even for failed items
+            if (onProgress) {
+              onProgress(i + 1, items.length);
+            }
             // Skip this item and continue with the next one
             continue;
           }
@@ -242,6 +274,11 @@ const useCategoryStore = create((set, get) => ({
           // Add the successfully fetched item to our collection
           completeItems.push(data.data);
 
+          // Update progress
+          if (onProgress) {
+            onProgress(i + 1, items.length);
+          }
+
           // Wait 500ms before the next request (2 requests per second = 500ms apart)
           // Skip the delay after the last item (no need to wait)
           if (i < items.length - 1) {
@@ -250,6 +287,10 @@ const useCategoryStore = create((set, get) => ({
         } catch (error) {
           // If there's a network error or other exception, log it and continue
           console.warn(`Error fetching item ${item.id}:`, error.message);
+          // Update progress even for failed items
+          if (onProgress) {
+            onProgress(i + 1, items.length);
+          }
           // The item is skipped, loop continues to next item
         }
       }

@@ -26,8 +26,34 @@ const List = () => {
   const loadCategories = useCategoryStore((state) => state.loadCategories);
   const loadPrayers = useCategoryStore((state) => state.loadPrayers);
   const [newCategory, setNewCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchDua = async () => {
+    setLoading(true);
+
+    // Timeout handler
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 10000);
+    try {
+      const response = await fetch(`${BASE_URL}/categories`, {
+        headers: {
+          "Accept-Language": "en",
+        },
+      });
+      if (!response.ok)
+        throw new Error(data.message || "Failed to fetch dhikr");
+      const data = await response.json();
+    } catch (error) {
+      console.log("error fetching dua", error);
+    } finally {
+      clearTimeout(timeout);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
+    fetchDua();
     loadCategories();
     loadPrayers(); // fetch categories on mount
   }, []);

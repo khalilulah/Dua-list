@@ -96,7 +96,7 @@ const DuaList = () => {
           >
             {item.title}
           </AppText>
-          <AppText style={{ fontSize: 12, color: "gray" }}>
+          <AppText style={{ fontSize: 12, color: "red" }}>
             {item.currentCount}/{item.numberOfTimes} times
           </AppText>
         </View>
