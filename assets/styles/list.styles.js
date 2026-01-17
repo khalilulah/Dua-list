@@ -9,8 +9,9 @@ const cardWidth = (screenWidth - widthPixel(6) - cardMargin * 4) / 2; // Account
 export const ProgressBarWidth = cardWidth - cardPadding * 2;
 const styles = StyleSheet.create({
   progressCard: {
-    backgroundColor: COLORS.cardBackground,
-    borderColor: COLORS.border,
+    backgroundColor: COLORS.Secondary,
+    elevation: 10,
+    borderColor: COLORS.Secondary,
     borderRadius: widthPixel(4),
     width: cardWidth,
     padding: cardPadding,
@@ -22,8 +23,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: heightPixel(26),
   },
+  AddIcon: {
+    backgroundColor: COLORS.Secondary,
+    elevation: 10,
+    borderColor: COLORS.Secondary,
+    borderRadius: widthPixel(2),
+    padding: widthPixel(1.4),
+  },
   FlatListContainer: {
-    paddingHorizontal: widthPixel(2.5),
+    paddingTop: 30,
+    flexDirection: "column",
+    alignItems: "center",
+    borderTopLeftRadius: widthPixel(6.5),
+    borderTopRightRadius: widthPixel(6.5),
+    flex: 1,
+
+    backgroundColor: COLORS.Secondary,
   },
   header: {
     display: "flex",
@@ -40,10 +55,10 @@ const styles = StyleSheet.create({
   FlatList: { paddingBottom: heightPixel(15) },
   modalStyle: {
     width: widthPixel(80),
-    height: heightPixel(25),
+    height: heightPixel(30),
     backgroundColor: COLORS.cardBackground,
     borderRadius: widthPixel(4),
-    padding: 7,
+    padding: 17,
   },
   modalHeader: {
     display: "flex",

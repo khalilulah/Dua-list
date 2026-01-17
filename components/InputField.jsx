@@ -8,7 +8,9 @@ const InputField = ({ label, placeholder, ...props }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.textContainer}>
-        <AppText style={{ paddingBottom: 10 }}>{label}</AppText>
+        <AppText style={{ paddingBottom: 10 }} weight="Regular">
+          {label}
+        </AppText>
         <TextInput
           placeholder={placeholder}
           {...props}

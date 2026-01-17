@@ -9,6 +9,7 @@ export const ProgressBarWidth = cardWidth - cardPadding * 2;
 const styles = StyleSheet.create({
   textContainer: {
     display: "flex",
+    marginVertical: 10,
     justifyContent: "flex-start",
     alignItems: "flex-start",
     borderRadius: 10,
@@ -19,7 +20,8 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderColor: COLORS.border,
+    borderColor: COLORS.lightSecondary,
+    fontFamily: "Inter-Regular", // 👈 affects placeholder + input text
   },
 });
 

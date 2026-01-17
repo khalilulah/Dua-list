@@ -1,7 +1,9 @@
 const COLORS = {
-  primary: "#4CAF50",
-  textPrimary: "#2e5a2e",
-  textSecondary: "#688f68",
+  primary: "#06413e",
+  Secondary: "#ffffff",
+  lightSecondary: "#9cb9b8",
+  textPrimary: "#787878",
+  textSecondary: "#f2f2f2",
   textDark: "#1b361b",
   placeholderText: "#767676",
   background: "#e8f5e9",
@@ -10,6 +12,19 @@ const COLORS = {
   border: "#c8e6c9",
   white: "#ffffff",
   black: "#000000",
+  // "#ffffff",
+  // "#e6eeed",
+  // "#cddcdb",
+  // "#b5cbca",
+  // "#9cb9b8",
+  // "#6a9794",
+  // "#397471",
+  // "#07514d",
+  // "#06413e",
+  // "#04312e",
+  // "#03201f",
+  // "#01100f",
+  // "#000000",
 };
 
 export default COLORS;

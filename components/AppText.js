@@ -9,8 +9,8 @@ export default function AppText({
   // Map weight prop to your loaded fonts
   const fontMap = {
     Regular: "Jakarta-Regular",
-    Medium: "Jakarta-Medium",
-    SemiBold: "Jakarta-SemiBold",
+    // Medium: "Jakarta-Medium",
+    // SemiBold: "Jakarta-SemiBold",
     Bold: "Jakarta-Bold",
     ExtraBold: "Jakarta-ExtraBold",
     Light: "Jakarta-Light",

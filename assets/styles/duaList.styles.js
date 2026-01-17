@@ -20,7 +20,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   flatListStyle: {
+    marginTop: 10,
+    backgroundColor: "#fff",
     backgroundColor: COLORS.textSecondary,
+    elevation: 4,
+    // iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 10,

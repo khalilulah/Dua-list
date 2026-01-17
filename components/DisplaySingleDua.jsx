@@ -145,7 +145,7 @@ const DisplaySingleDua = () => {
             {/* Arabic Text */}
             {prayer.arabicText && (
               <View style={styles.textSection}>
-                <AppText weight="Medium" style={styles.sectionLabel}>
+                <AppText weight="Regular" style={styles.sectionLabel}>
                   Arabic
                 </AppText>
                 <AppText style={styles.arabicText}>{prayer.arabicText}</AppText>
@@ -155,7 +155,7 @@ const DisplaySingleDua = () => {
             {/* Transliteration */}
             {prayer.transliteration && (
               <View style={styles.textSection}>
-                <AppText weight="Medium" style={styles.sectionLabel}>
+                <AppText weight="Regular" style={styles.sectionLabel}>
                   Transliteration
                 </AppText>
                 <AppText style={styles.transliteration}>
@@ -167,7 +167,7 @@ const DisplaySingleDua = () => {
             {/* Translation */}
             {prayer.translation && (
               <View style={styles.textSection}>
-                <AppText weight="Medium" style={styles.sectionLabel}>
+                <AppText weight="Regular" style={styles.sectionLabel}>
                   Translation
                 </AppText>
                 <AppText style={styles.translation}>

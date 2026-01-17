@@ -9,7 +9,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
         tabBarStyle: {
-          backgroundColor: COLORS.border,
+          backgroundColor: COLORS.Secondary,
           borderRadius: 50,
           marginBottom: 20,
           height: 50,

@@ -11,7 +11,6 @@ import {
   Alert,
   Dimensions,
   FlatList,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -105,7 +104,7 @@ const List = () => {
         onPress={() => router.push(`/(dua)?categoryId=${item.id}`)}
         onLongPress={() => handleDeleteCategory(item.id)}
       >
-        <AppText weight="Medium" style={{ marginBottom: 15 }}>
+        <AppText weight="Regular" style={{ marginBottom: 15 }}>
           {item.name}
         </AppText>
 
@@ -113,10 +112,10 @@ const List = () => {
           size={ProgressBarWidth}
           width={15}
           fill={item.progress}
-          tintColor={COLORS.border}
-          backgroundColor="#3d5875"
+          tintColor={COLORS.lightSecondary}
+          backgroundColor="#06413e"
         >
-          {(fill) => <Text>{item.progress}%</Text>}
+          {(fill) => <AppText>{item.progress}%</AppText>}
         </AnimatedCircularProgress>
       </TouchableOpacity>
     );
@@ -139,7 +138,12 @@ const List = () => {
             </AppText>
 
             <TouchableOpacity onPress={() => setIsOpen(true)}>
-              <Ionicons name="add-outline" size={35} color={COLORS.primary} />
+              <Ionicons
+                name="add-outline"
+                size={25}
+                color={COLORS.primary}
+                style={styles.AddIcon}
+              />
             </TouchableOpacity>
           </View>
         }
@@ -180,8 +184,8 @@ const List = () => {
               marginTop: 15,
               alignItems: "center",
               justifyContent: "center",
-              paddingVertical: 5,
-              borderRadius: 5,
+              paddingVertical: 9,
+              borderRadius: 18,
               backgroundColor: COLORS.primary,
             }}
             // check this out
@@ -193,7 +197,7 @@ const List = () => {
               }
             }}
           >
-            <AppText style={{ color: "white", fontSize: 13 }}>
+            <AppText style={{ color: "white", fontSize: 13 }} weight="Bold">
               Create category
             </AppText>
           </TouchableOpacity>

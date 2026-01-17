@@ -81,7 +81,6 @@ const DuaList = () => {
     // List of dua
     return (
       <TouchableOpacity
-        style={styles.item}
         onPress={() => {
           // Navigate to prayer details screen
           router.push(`/(dua)/singlePrayer?prayerId=${item.id}`);
@@ -90,20 +89,23 @@ const DuaList = () => {
       >
         <View style={{ width: "90%" }}>
           <AppText
-            weight="Medium"
+            weight="Regular"
             style={{ marginBottom: 5, width: "100%" }}
             numberOfLines={1}
           >
             {item.title}
           </AppText>
-          <AppText style={{ fontSize: 12, color: "red" }}>
+          <AppText
+            weight="Bold"
+            style={{ fontSize: 12, color: COLORS.primary }}
+          >
             {item.currentCount}/{item.numberOfTimes} times
           </AppText>
         </View>
         <Ionicons
           name="chevron-forward"
           size={20}
-          color={COLORS.primary}
+          color={COLORS.lightSecondary}
           style={{ marginBottom: 10 }}
         />
       </TouchableOpacity>
