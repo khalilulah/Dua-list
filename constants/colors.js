@@ -3,7 +3,7 @@ const COLORS = {
   Secondary: "#ffffff",
   lightSecondary: "#9cb9b8",
   textPrimary: "#787878",
-  textSecondary: "#f2f2f2",
+  textSecondary: "#e6eeed",
   textDark: "#1b361b",
   placeholderText: "#767676",
   background: "#e8f5e9",
