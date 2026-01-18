@@ -4,9 +4,11 @@ import { heightPixel, widthPixel } from "../../utils/responsive";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const cardMargin = widthPixel(2);
+const cardHorizontalMargin = widthPixel(2); // Increased horizontal margin
 const cardPadding = widthPixel(3);
-const cardWidth = (screenWidth - widthPixel(6) - cardMargin * 4) / 2; // Account for padding and margins
+const cardWidth = (screenWidth - widthPixel(6) - cardHorizontalMargin * 4) / 2;
 export const ProgressBarWidth = cardWidth - cardPadding * 2;
+
 const styles = StyleSheet.create({
   progressCard: {
     backgroundColor: COLORS.Secondary,
@@ -15,7 +17,8 @@ const styles = StyleSheet.create({
     borderRadius: widthPixel(4),
     width: cardWidth,
     padding: cardPadding,
-    margin: cardMargin,
+    marginVertical: cardMargin,
+    marginHorizontal: cardHorizontalMargin,
     borderWidth: 1,
     display: "flex",
     flexDirection: "column",
@@ -31,28 +34,43 @@ const styles = StyleSheet.create({
     padding: widthPixel(1.4),
   },
   FlatListContainer: {
-    paddingTop: 30,
-    flexDirection: "column",
-    alignItems: "center",
-    borderTopLeftRadius: widthPixel(6.5),
-    borderTopRightRadius: widthPixel(6.5),
     flex: 1,
-
     backgroundColor: COLORS.Secondary,
+  },
+  containerRemaining: {
+    flex: 1, // Add this
+    minHeight: screenHeight * 0.6,
+    backgroundColor: COLORS.Secondary,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: 10,
+    paddingTop: 15,
+    paddingHorizontal: 1,
+    // paddingBottom: heightPixel(25),
+  },
+  hadithsContainer: {
+    alignSelf: "center",
+    paddingTop: 13,
+    alignItems: "center",
+    marginBottom: 10,
+    marginHorizontal: cardHorizontalMargin,
   },
   header: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: cardMargin,
+    marginTop: cardMargin,
+    marginHorizontal: cardHorizontalMargin + cardHorizontalMargin,
     marginBottom: 20,
-    width: "auto",
   },
   headerTitle: {
     fontSize: 20,
+    color: COLORS.primary,
   },
-  FlatList: { paddingBottom: heightPixel(15) },
+  FlatList: {
+    flexGrow: 1,
+  },
   modalStyle: {
     width: widthPixel(80),
     height: heightPixel(30),

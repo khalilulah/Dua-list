@@ -10,11 +10,14 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
+import DailyHadith from "../components/HadithComponent";
+import { BASE_URL } from "../constants/api";
+import hadiths from "../constants/hadiths";
 
 const List = () => {
   const router = useRouter();
@@ -30,7 +33,6 @@ const List = () => {
   const fetchDua = async () => {
     setLoading(true);
 
-    // Timeout handler
     const timeout = setTimeout(() => {
       setLoading(false);
     }, 10000);
@@ -54,20 +56,17 @@ const List = () => {
   useEffect(() => {
     fetchDua();
     loadCategories();
-    loadPrayers(); // fetch categories on mount
+    loadPrayers();
   }, []);
 
-  // Get screen dimensions
-  const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+  const { width: screenWidth } = Dimensions.get("window");
 
-  // get number of column based on screen width
   const getNumColumns = () => {
-    if (screenWidth < 600) return 2; // Phone
-    if (screenWidth < 900) return 3; // Small tablet
-    return 4; // Large tablet
+    if (screenWidth < 600) return 2;
+    if (screenWidth < 900) return 3;
+    return 4;
   };
 
-  // list of categories including the "add item"
   const extendedData = [...categories, { id: "add_new", addCategory: true }];
 
   const handleDeleteCategory = (categoryId) => {
@@ -80,15 +79,27 @@ const List = () => {
           text: "Delete",
           onPress: () => deleteCategory(categoryId),
         },
-      ]
+      ],
     );
   };
-  // renderItem
-  const renderitems = ({ item }) => {
-    //add category box
+
+  // Function to chunk array into rows based on number of columns
+  const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+  };
+
+  const numColumns = getNumColumns();
+  const rows = chunkArray(extendedData, numColumns);
+
+  const renderItem = (item) => {
     if (item.addCategory) {
       return (
         <TouchableOpacity
+          key={item.id}
           style={styles.progressCard}
           onPress={() => setIsOpen(true)}
         >
@@ -97,9 +108,9 @@ const List = () => {
       );
     }
 
-    // list of categories
     return (
       <TouchableOpacity
+        key={item.id}
         style={styles.progressCard}
         onPress={() => router.push(`/(dua)?categoryId=${item.id}`)}
         onLongPress={() => handleDeleteCategory(item.id)}
@@ -122,54 +133,125 @@ const List = () => {
   };
 
   return (
-    <View style={styles.FlatListContainer}>
-      <FlatList
-        data={extendedData}
-        renderItem={renderitems}
+    <View style={styles.FlatLiastContainer}>
+      <ScrollView
         showsVerticalScrollIndicator={false}
-        numColumns={getNumColumns()}
-        key={getNumColumns()}
-        onEndReachedThreshold={0.5}
         contentContainerStyle={styles.FlatList}
-        ListHeaderComponent={
+      >
+        {/* Background Icons */}
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: COLORS.primary,
+          }}
+        >
+          <Ionicons
+            name="moon-outline"
+            size={160}
+            color="white"
+            style={{
+              position: "absolute",
+              top: -30,
+              right: -40,
+              opacity: 0.08,
+            }}
+          />
+
+          <Ionicons
+            name="book-outline"
+            size={140}
+            color="white"
+            style={{
+              position: "absolute",
+              top: 180,
+              left: -30,
+              opacity: 0.06,
+            }}
+          />
+          <Ionicons
+            name="star-outline"
+            size={140}
+            color="white"
+            style={{
+              position: "absolute",
+              top: 50,
+              left: "25%",
+              opacity: 0.06,
+            }}
+          />
+        </View>
+
+        {/* Daily Hadith Header */}
+        <View style={styles.hadithsContainer}>
+          <DailyHadith data={hadiths} />
+        </View>
+
+        {/* Container for the rest of the content */}
+        <View style={styles.containerRemaining}>
           <View style={styles.header}>
             <AppText weight="Bold" style={styles.headerTitle}>
-              My Dua
+              My dua
             </AppText>
 
-            <TouchableOpacity onPress={() => setIsOpen(true)}>
-              <Ionicons
-                name="add-outline"
-                size={25}
-                color={COLORS.primary}
-                style={styles.AddIcon}
-              />
+            <TouchableOpacity
+              style={{
+                borderBlockColor: COLORS.primary,
+                borderWidth: 1,
+                paddingHorizontal: 10,
+                paddingVertical: 2.5,
+                borderRadius: 10,
+              }}
+              onPress={() => setIsOpen(true)}
+            >
+              <AppText weight="Bold" style={{ color: COLORS.primary }}>
+                Add dua
+              </AppText>
             </TouchableOpacity>
           </View>
-        }
-        ListEmptyComponent={
-          <View style={styles.progressCard}>
-            <Ionicons name="add-outline" size={50} color={COLORS.primary} />
+
+          {/* Grid of Cards */}
+          <View>
+            {categories.length === 0 ? (
+              <TouchableOpacity
+                style={styles.progressCard}
+                onPress={() => setIsOpen(true)}
+              >
+                <Ionicons name="add-outline" size={50} color={COLORS.primary} />
+              </TouchableOpacity>
+            ) : (
+              rows.map((row, rowIndex) => (
+                <View
+                  key={rowIndex}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  {row.map((item) => renderItem(item))}
+                </View>
+              ))
+            )}
           </View>
-        }
-      />
+        </View>
+      </ScrollView>
 
       {/* POP UP MODAL */}
       <Modal isOpen={isOpen}>
-        {/* MODAL CONTAINER */}
         <View style={styles.modalStyle}>
-          {/* MODAL HEADER CONTAINER */}
           <View style={styles.modalHeader}>
             <AppText weight="Bold" style={{ fontSize: 18, marginBottom: 10 }}>
               Create a new category
             </AppText>
-            {/* MODAL HEADER EXIT BURRON*/}
             <TouchableOpacity onPress={() => setIsOpen(false)}>
               <Ionicons name="close-outline" size={28} color="red" />
             </TouchableOpacity>
           </View>
 
-          {/* INPUT FIELD */}
           <InputField
             label="Name of Category"
             placeholder="Friday prayer"
@@ -177,7 +259,6 @@ const List = () => {
             onChangeText={setNewCategory}
           />
 
-          {/* MODAL BUTTON */}
           <TouchableOpacity
             activeOpacity={0.7}
             style={{
@@ -188,7 +269,6 @@ const List = () => {
               borderRadius: 18,
               backgroundColor: COLORS.primary,
             }}
-            // check this out
             onPress={() => {
               if (newCategory.trim()) {
                 addCategory(newCategory.trim());

@@ -1,4 +1,5 @@
 import COLORS from "@/constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -50,56 +51,113 @@ const DailyHadith = ({ data }) => {
   if (!hadith) return null;
 
   return (
-    <View
-      style={{
-        padding: 16,
-        borderRadius: 12,
-      }}
-    >
-      <AppText
-        weight="Bold"
-        style={{ marginBottom: 6, color: COLORS.Secondary }}
-      >
-        {hadith.narrator}
-      </AppText>
-
-      <AppText
+    <>
+      <View
+        pointerEvents="none" // 👈 prevents blocking touches
         style={{
-          fontSize: 14,
-          marginBottom: 8,
-          opacity: 0.7,
-          color: COLORS.textSecondary,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: COLORS.primary,
         }}
       >
-        {hadith.translation}
-      </AppText>
-      <View style={{ display: "flex", flexDirection: "row" }}>
+        <Ionicons
+          name="moon-outline"
+          size={160}
+          color="white"
+          style={{
+            position: "absolute",
+            top: -30,
+            right: -40,
+            opacity: 0.08,
+          }}
+        />
+
+        <Ionicons
+          name="book-outline"
+          size={140}
+          color="white"
+          style={{
+            position: "absolute",
+            top: 180,
+            left: -30,
+            opacity: 0.06,
+          }}
+        />
+        <Ionicons
+          name="star-outline"
+          size={140}
+          color="white"
+          style={{
+            position: "absolute",
+            top: 50,
+            left: "25%",
+            opacity: 0.06,
+          }}
+        />
+      </View>
+      <View
+        style={{
+          padding: 20,
+          borderRadius: 24,
+
+          backgroundColor: "#04312e",
+        }}
+      >
         <AppText
           weight="Bold"
-          style={{ fontSize: 12, color: COLORS.Secondary }}
+          style={{ fontSize: 16, color: "white", marginBottom: 15 }}
         >
-          Reference :{" "}
+          Daily Hadith
         </AppText>
-        <AppText
-          style={{ fontSize: 12, opacity: 0.6, color: COLORS.Secondary }}
-        >
-          {hadith.reference}
-        </AppText>
-      </View>
-      <View style={{ display: "flex", flexDirection: "row" }}>
         <AppText
           weight="Bold"
-          style={{ fontSize: 12, color: COLORS.Secondary }}
+          style={{ marginBottom: 6, color: COLORS.Secondary }}
         >
-          In-book reference :{" "}
+          {hadith.narrator}
         </AppText>
+
         <AppText
-          style={{ fontSize: 12, opacity: 0.6, color: COLORS.Secondary }}
+          style={{
+            fontSize: 14,
+            marginBottom: 8,
+            opacity: 0.7,
+            color: COLORS.textSecondary,
+            marginBottom: 10,
+          }}
         >
-          {hadith.InBookReference}
+          {hadith.translation}
         </AppText>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <AppText
+            weight="Bold"
+            style={{ fontSize: 12, color: COLORS.Secondary }}
+          >
+            Reference :{" "}
+          </AppText>
+          <AppText
+            style={{ fontSize: 12, opacity: 0.6, color: COLORS.Secondary }}
+          >
+            {hadith.reference}
+          </AppText>
+        </View>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <AppText
+            weight="Bold"
+            style={{ fontSize: 12, color: COLORS.Secondary }}
+          >
+            In-book reference :{" "}
+          </AppText>
+          <AppText
+            style={{ fontSize: 12, opacity: 0.6, color: COLORS.Secondary }}
+          >
+            {hadith.InBookReference}
+          </AppText>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
