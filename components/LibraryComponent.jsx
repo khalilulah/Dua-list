@@ -16,6 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AppText from "./AppText";
 
 const LibraryComponent = () => {
   const [duaLibrary, setDuaLibrary] = useState([]);
@@ -24,7 +25,7 @@ const LibraryComponent = () => {
   const router = useRouter();
   const categories = useCategoryStore((state) => state.categories);
   const addCategoryFromAPI = useCategoryStore(
-    (state) => state.addCategoryFromAPI
+    (state) => state.addCategoryFromAPI,
   );
   const [timeoutError, setTimeoutError] = useState(false);
 
@@ -90,7 +91,7 @@ const LibraryComponent = () => {
           setProgress({ current, total });
         },
         // Cancel check callback - return the current ref value
-        () => cancelDownloadRef.current
+        () => cancelDownloadRef.current,
       );
 
       // Close progress modal
@@ -126,7 +127,7 @@ const LibraryComponent = () => {
 
   const handleAdd = (itemId, categoryName) => {
     const compareCategoryName = categories.find(
-      (category) => category.name.toLowerCase() === categoryName.toLowerCase()
+      (category) => category.name.toLowerCase() === categoryName.toLowerCase(),
     );
     console.log(itemId);
     console.log(categoryName);
@@ -169,27 +170,72 @@ const LibraryComponent = () => {
             console.log("Cancel flag set to true");
           },
         },
-      ]
+      ],
     );
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectedDhikr(item.slug, item.name)}>
+    <TouchableOpacity
+      onPress={() => handleSelectedDhikr(item.slug, item.name)}
+      style={styles.libraryContainer}
+    >
       {console.log(item)}
-      <View style={{ marginBottom: 20 }}>
-        <Text>{item.slug}</Text>
-        <Text>{item.total}</Text>
+      <View
+        style={{
+          alignSelf: "center",
+          width: "70%",
+        }}
+      >
+        <AppText
+          weight="Regular"
+          style={{
+            color: COLORS.primary,
+            textTransform: "capitalize",
+            marginBottom: 5,
+          }}
+        >
+          {item.slug}
+        </AppText>
+        <AppText
+          weight="Regular"
+          style={{ color: COLORS.primary, fontSize: 14 }}
+        >
+          <AppText
+            weight="ExtraBold"
+            style={{ color: COLORS.primary, fontSize: 14 }}
+          >
+            Number of dua:
+          </AppText>{" "}
+          {item.total}
+        </AppText>
       </View>
       <TouchableOpacity
         style={styles.progressCard}
         onPress={() => handleAdd(item.slug, item.name)}
       >
-        <Ionicons name="add-outline" size={20} color={COLORS.primary} />
+        <Ionicons
+          name="add-outline"
+          size={25}
+          color={COLORS.Secondary}
+          style={{
+            borderRadius: 17.5,
+            alignItems: "center",
+            backgroundColor: COLORS.primary,
+          }}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
 
-  if (loading) return <Text>this might take a minute Loading...</Text>;
+  if (loading)
+    return (
+      <AppText
+        weight="ExtraBold"
+        style={{ color: COLORS.primary, fontSize: 14 }}
+      >
+        this might take a minute Loading...
+      </AppText>
+    );
   if (timeoutError) {
     return (
       <View style={{ alignItems: "center", marginTop: 40 }}>
@@ -227,7 +273,7 @@ const LibraryComponent = () => {
       >
         <View style={progressStyles.overlay}>
           <View style={progressStyles.modalContainer}>
-            <Text style={progressStyles.title}>Downloading Duas</Text>
+            <AppText style={progressStyles.title}>Downloading Duas</AppText>
 
             <View style={progressStyles.progressContainer}>
               <Text style={progressStyles.progressText}>

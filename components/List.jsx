@@ -133,7 +133,7 @@ const List = () => {
   };
 
   return (
-    <View style={styles.FlatLiastContainer}>
+    <View style={styles.FlatListContainer}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.FlatList}
@@ -195,7 +195,7 @@ const List = () => {
         <View style={styles.containerRemaining}>
           <View style={styles.header}>
             <AppText weight="Bold" style={styles.headerTitle}>
-              My dua
+              Dua category
             </AppText>
 
             <TouchableOpacity
