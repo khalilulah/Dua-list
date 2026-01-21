@@ -41,7 +41,7 @@ const useCategoryStore = create((set, get) => ({
       if (!name?.trim()) return; // prevent empty names
       const categories = get().categories;
       const compareCategoryName = categories.find(
-        (category) => category.name.toLowerCase() === name.toLowerCase()
+        (category) => category.name.toLowerCase() === name.toLowerCase(),
       );
 
       if (!compareCategoryName) {
@@ -56,7 +56,7 @@ const useCategoryStore = create((set, get) => ({
 
         await AsyncStorage.setItem(
           "categories",
-          JSON.stringify(updatedCategories)
+          JSON.stringify(updatedCategories),
         );
       } else {
         Alert.alert("Existing Group", "The group already exists", [
@@ -103,7 +103,7 @@ const useCategoryStore = create((set, get) => ({
   updatePrayerCount: async (prayerId, newCount) => {
     try {
       const updatedPrayers = get().prayers.map((prayer) =>
-        prayer.id === prayerId ? { ...prayer, currentCount: newCount } : prayer
+        prayer.id === prayerId ? { ...prayer, currentCount: newCount } : prayer,
       );
       set({ prayers: updatedPrayers });
       await AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers));
@@ -122,7 +122,7 @@ const useCategoryStore = create((set, get) => ({
 
       const updatedCategories = categories.map((category) => {
         const categoryPrayers = prayers.filter(
-          (p) => p.categoryId === category.id
+          (p) => p.categoryId === category.id,
         );
 
         if (categoryPrayers.length === 0) {
@@ -131,11 +131,11 @@ const useCategoryStore = create((set, get) => ({
 
         const totalRequired = categoryPrayers.reduce(
           (sum, p) => sum + p.numberOfTimes,
-          0
+          0,
         );
         const totalCompleted = categoryPrayers.reduce(
           (sum, p) => sum + p.currentCount,
-          0
+          0,
         );
         const progress = Math.round((totalCompleted / totalRequired) * 100);
 
@@ -145,7 +145,7 @@ const useCategoryStore = create((set, get) => ({
       set({ categories: updatedCategories });
       await AsyncStorage.setItem(
         "categories",
-        JSON.stringify(updatedCategories)
+        JSON.stringify(updatedCategories),
       );
     } catch (error) {
       console.error("Error updating category progress:", error);
@@ -163,10 +163,10 @@ const useCategoryStore = create((set, get) => ({
   // Delete category and its prayers
   deleteCategory: async (categoryId) => {
     const updatedCategories = get().categories.filter(
-      (c) => c.id !== categoryId
+      (c) => c.id !== categoryId,
     );
     const updatedPrayers = get().prayers.filter(
-      (p) => p.categoryId !== categoryId
+      (p) => p.categoryId !== categoryId,
     );
     set({ categories: updatedCategories, prayers: updatedPrayers });
     await Promise.all([
@@ -178,7 +178,7 @@ const useCategoryStore = create((set, get) => ({
   // Update prayer
   updatePrayer: async (prayerId, updatedData) => {
     const updatedPrayers = get().prayers.map((p) =>
-      p.id === prayerId ? { ...p, ...updatedData } : p
+      p.id === prayerId ? { ...p, ...updatedData } : p,
     );
     set({ prayers: updatedPrayers });
     await AsyncStorage.setItem("prayers", JSON.stringify(updatedPrayers));
@@ -199,11 +199,11 @@ const useCategoryStore = create((set, get) => ({
     categoryName,
     language = "en",
     onProgress = null, // Callback for progress updates
-    shouldCancel = null // Function that returns true if download should be cancelled
+    shouldCancel = null, // Function that returns true if download should be cancelled
   ) => {
     try {
       // Step 1: Fetch list of items in the category
-      console.log(`Fetching: ${BASE_URL}/categories/${slug}`);
+      // console.log(`Fetching: ${BASE_URL}/categories/${slug}`);
       const listResponse = await fetch(`${BASE_URL}/categories/${slug}`, {
         headers: {
           "Accept-Language": language,
@@ -297,7 +297,7 @@ const useCategoryStore = create((set, get) => ({
 
       // Log how many items we successfully retrieved
       console.log(
-        `Successfully fetched ${completeItems.length} out of ${items.length} items`
+        `Successfully fetched ${completeItems.length} out of ${items.length} items`,
       );
 
       // If we couldn't fetch ANY items, abort the operation

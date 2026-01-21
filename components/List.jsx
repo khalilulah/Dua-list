@@ -46,7 +46,7 @@ const List = () => {
         throw new Error(data.message || "Failed to fetch dhikr");
       const data = await response.json();
     } catch (error) {
-      console.log("error fetching dua", error);
+      // console.log("error fetching dua", error);
     } finally {
       clearTimeout(timeout);
       setLoading(false);

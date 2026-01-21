@@ -39,6 +39,14 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap"
+          ]
+        }
       ]
     ],
     "experiments": {

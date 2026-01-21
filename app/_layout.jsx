@@ -12,6 +12,7 @@ export default function RootLayout() {
     "Jakarta-ExtraLight": require("../assets/fonts/Lato-Thin.ttf"),
     "Jakarta-Light": require("../assets/fonts/Lato-Light.ttf"),
     "Jakarta-Regular": require("../assets/fonts/Lato-Regular.ttf"),
+    "Amiri-Regular": require("../assets/fonts/Amiri-Regular.ttf"),
   });
 
   if (!loaded) return null; // prevent flashing with fallback fonts

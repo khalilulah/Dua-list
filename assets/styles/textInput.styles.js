@@ -20,19 +20,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderColor: COLORS.lightSecondary,
-    fontFamily: "Inter-Regular", // 👈 affects placeholder + input text
+    fontFamily: "Inter-Regular",
   },
   libraryContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    backgroundColor: "#fff",
+    marginBottom: 12,
+    borderRadius: 12,
+    padding: 16,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.5,
+    borderRightWidth: 4,
+    borderRightColor: COLORS.primary,
+  },
+
+  simplr: {
+    flexDirection: "row",
     alignItems: "center",
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: "#6a9794",
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    borderRadius: 10,
   },
   progressCard: {
     display: "flex",

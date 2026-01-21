@@ -55,10 +55,10 @@ const LibraryComponent = () => {
       if (!response.ok)
         throw new Error(data.message || "Failed to fetch dhikr");
       const data = await response.json();
-      console.log(data.data);
+      // console.log(data.data);
       setDuaLibrary(data.data);
     } catch (error) {
-      console.log("error fetching dua", error);
+      // console.log("error fetching dua", error);
     } finally {
       clearTimeout(timeout);
       setLoading(false);
@@ -70,7 +70,7 @@ const LibraryComponent = () => {
     fetchDua();
   }, []);
 
-  console.log(categories);
+  // console.log(categories);
 
   // Modified function to handle adding with progress tracking
   const handleAddWithProgress = async (itemId, categoryName) => {
@@ -129,8 +129,8 @@ const LibraryComponent = () => {
     const compareCategoryName = categories.find(
       (category) => category.name.toLowerCase() === categoryName.toLowerCase(),
     );
-    console.log(itemId);
-    console.log(categoryName);
+    // console.log(itemId);
+    // console.log(categoryName);
 
     setIsOpen(true);
     Alert.alert("Add to category", "Do you want to add to Category?", [
@@ -179,7 +179,7 @@ const LibraryComponent = () => {
       onPress={() => handleSelectedDhikr(item.slug, item.name)}
       style={styles.libraryContainer}
     >
-      {console.log(item)}
+      {/* {console.log(item)} */}
       <View
         style={{
           alignSelf: "center",
@@ -229,20 +229,40 @@ const LibraryComponent = () => {
 
   if (loading)
     return (
-      <AppText
-        weight="ExtraBold"
-        style={{ color: COLORS.primary, fontSize: 14 }}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: COLORS.background,
+        }}
       >
-        this might take a minute Loading...
-      </AppText>
+        <ActivityIndicator size={30} color={COLORS.primary} />
+        <AppText
+          weight="ExtraBold"
+          style={{ color: COLORS.primary, fontSize: 14, marginTop: 2 }}
+        >
+          this might take a minute
+        </AppText>
+      </View>
     );
   if (timeoutError) {
     return (
       <View style={{ alignItems: "center", marginTop: 40 }}>
-        <Text style={{ marginBottom: 10 }}>
+        <AppText style={{ marginBottom: 10 }}>
           Failed to fetch data. Please check your connection.
-        </Text>
-        <Button title="Reload" onPress={fetchDua} />
+        </AppText>
+        <AppText
+          style={{
+            paddingHorizontal: 5,
+            paddingVertical: 10,
+            borderRadius: 5,
+            backgroundColor: COLORS.primary,
+          }}
+          onPress={fetchDua}
+        >
+          Reload
+        </AppText>
       </View>
     );
   }
