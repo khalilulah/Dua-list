@@ -55,7 +55,7 @@ const BottomSheets = ({
       !formData.transliteration.trim()
     ) {
       alert(
-        "Please fill at least one of: Arabic, Translation, or Transliteration"
+        "Please fill at least one of: Arabic, Translation, or Transliteration",
       );
       return;
     }
@@ -86,7 +86,12 @@ const BottomSheets = ({
 
         {/* Fields */}
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Title</AppText>
+          <AppText
+            weight="Regular"
+            style={{ fontSize: 15, marginBottom: 5, color: COLORS.primary }}
+          >
+            Title
+          </AppText>
           <BottomSheetTextInput
             style={styles.BottomSheetTextInput}
             value={formData.title}
@@ -95,7 +100,12 @@ const BottomSheets = ({
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Number of times</AppText>
+          <AppText
+            weight="Regular"
+            style={{ fontSize: 15, marginBottom: 5, color: COLORS.primary }}
+          >
+            Number of times
+          </AppText>
           <BottomSheetTextInput
             style={styles.BottomSheetTextInput}
             value={formData.numberOfTimes}
@@ -105,7 +115,12 @@ const BottomSheets = ({
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Arabic Text</AppText>
+          <AppText
+            weight="Regular"
+            style={{ fontSize: 15, marginBottom: 5, color: COLORS.primary }}
+          >
+            Arabic Text
+          </AppText>
           <BottomSheetTextInput
             style={styles.BottomSheetTextInputMultiLines}
             multiline
@@ -115,7 +130,12 @@ const BottomSheets = ({
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Translation</AppText>
+          <AppText
+            weight="Regular"
+            style={{ fontSize: 15, marginBottom: 5, color: COLORS.primary }}
+          >
+            Translation
+          </AppText>
           <BottomSheetTextInput
             style={styles.BottomSheetTextInputMultiLines}
             multiline
@@ -125,7 +145,12 @@ const BottomSheets = ({
         </View>
 
         <View style={styles.BottomSheetTextInputContainer}>
-          <AppText style={{ fontSize: 13 }}>Transliteration</AppText>
+          <AppText
+            weight="Regular"
+            style={{ fontSize: 15, marginBottom: 5, color: COLORS.primary }}
+          >
+            Transliteration
+          </AppText>
           <BottomSheetTextInput
             style={styles.BottomSheetTextInputMultiLines}
             multiline

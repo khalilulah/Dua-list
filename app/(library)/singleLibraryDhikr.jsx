@@ -35,8 +35,13 @@ const singleLibraryDhikr = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
+        <View style={styles.countBadge}>
+          <AppText weight="Bold" style={styles.countText}>
+            Recite {dhikr.count}× time(s)
+          </AppText>
+        </View>
         {/* Arabic Text */}
-        <View style={styles.arabicContainer}>
+        <View>
           <AppText style={styles.arabicText}>{dhikr.arabic}</AppText>
         </View>
 
@@ -47,7 +52,9 @@ const singleLibraryDhikr = () => {
               Transliteration
             </AppText>
           </View>
-          <AppText style={styles.latinText}>{dhikr.latin}</AppText>
+          <AppText weight="Regular" style={styles.latinText}>
+            {dhikr.latin}
+          </AppText>
         </View>
 
         {/* Translation */}
@@ -83,11 +90,6 @@ const singleLibraryDhikr = () => {
         </View>
 
         {/* Count Badge */}
-        <View style={styles.countBadge}>
-          <AppText weight="Bold" style={styles.countText}>
-            Recite {dhikr.count}× times
-          </AppText>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -130,25 +132,16 @@ const styles = StyleSheet.create({
     shadowRadius: 1.5,
   },
   arabicText: {
-    fontSize: 28,
+    fontSize: 18,
     lineHeight: 48,
     textAlign: "right",
+    marginBottom: 16,
     color: COLORS.primary,
-    fontFamily: "Amiri-Regular", // You'll need to load this font
+    fontFamily: "Amiri-Regular",
   },
   section: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 12,
+    paddingVertical: 20,
     marginBottom: 16,
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
   },
   labelContainer: {
     marginBottom: 12,
@@ -163,36 +156,36 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   latinText: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 26,
     color: "#555",
-    fontStyle: "italic",
+    textAlign: "left",
+    // fontStyle: "italic",
   },
   translationText: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 26,
-    color: "#333",
+    color: "#555",
   },
   fawaidText: {
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 24,
-    color: "#444",
+    color: "#555",
   },
   sourceText: {
     fontSize: 14,
     lineHeight: 22,
-    color: "#666",
-    fontStyle: "italic",
+    color: "#555",
   },
   countBadge: {
     backgroundColor: COLORS.primary,
-    padding: 16,
+    padding: 14,
     borderRadius: 12,
     alignItems: "center",
-    marginTop: 8,
+    marginBottom: 32,
   },
   countText: {
-    fontSize: 16,
+    fontSize: 14,
     color: COLORS.Secondary,
   },
 });

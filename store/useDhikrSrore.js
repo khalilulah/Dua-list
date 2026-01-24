@@ -21,7 +21,7 @@ export const useCategoryStore = create((set) => ({
       if (!response.ok)
         throw new Error(data.message || "Failed to fetch books");
       const data = await response.json();
-      console.log(data.data);
+      // console.log(data.data);
 
       set({ categoryItems: data.data });
     } catch (error) {
@@ -40,7 +40,7 @@ export const useCategoryStore = create((set) => ({
           headers: {
             "Accept-Language": "en",
           },
-        }
+        },
       );
 
       if (!response.ok)

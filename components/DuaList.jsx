@@ -26,10 +26,10 @@ const DuaList = () => {
   const deletePrayer = useCategoryStore((state) => state.deletePrayer);
   const deleteCategory = useCategoryStore((state) => state.deleteCategory);
   const updateCategoryProgress = useCategoryStore(
-    (state) => state.updateCategoryProgress
+    (state) => state.updateCategoryProgress,
   );
   const getPrayersForCategory = useCategoryStore(
-    (state) => state.getPrayersForCategory
+    (state) => state.getPrayersForCategory,
   );
 
   // Load data on mount
@@ -42,7 +42,7 @@ const DuaList = () => {
   useFocusEffect(
     useCallback(() => {
       updateCategoryProgress();
-    }, [])
+    }, []),
   );
 
   // Get current category and its prayers
@@ -67,11 +67,18 @@ const DuaList = () => {
     if (item.addCategory) {
       return (
         <TouchableOpacity
-          style={styles.addDua}
+          style={styles.flatListStyle}
           onPress={() => setBottomForm(true)}
         >
-          <Ionicons name="add-circle-outline" size={25} color={"black"} />
-          <AppText weight="Bold" style={{ marginLeft: 5, marginBottom: 5 }}>
+          <Ionicons
+            name="add-circle-outline"
+            size={25}
+            color={COLORS.primary}
+          />
+          <AppText
+            weight="Bold"
+            style={{ marginLeft: 5, marginBottom: 5, color: COLORS.primary }}
+          >
             Add Dua
           </AppText>
         </TouchableOpacity>
@@ -86,11 +93,12 @@ const DuaList = () => {
           router.push(`/(dua)/singlePrayer?prayerId=${item.id}`);
         }}
         onLongPress={() => handleDeletePrayer(item.id)}
+        style={styles.flatListStyle}
       >
         <View style={{ width: "90%" }}>
           <AppText
-            weight="Regular"
-            style={{ marginBottom: 5, width: "100%" }}
+            weight="Bold"
+            style={{ marginBottom: 5, width: "100%", color: COLORS.primary }}
             numberOfLines={1}
           >
             {item.title}
@@ -106,7 +114,6 @@ const DuaList = () => {
           name="chevron-forward"
           size={20}
           color={COLORS.lightSecondary}
-          style={{ marginBottom: 10 }}
         />
       </TouchableOpacity>
     );
@@ -116,14 +123,17 @@ const DuaList = () => {
     <>
       <View style={styles.FlatListContainer}>
         <View style={styles.listHeader}>
-          <AppText weight="Bold" style={{}}>
+          <AppText
+            weight="Bold"
+            style={{ fontSize: 20, color: COLORS.primary }}
+          >
             {currentCategory?.name || "Category"}
           </AppText>
           <Menu>
             <MenuTrigger>
               <Ionicons
                 name="ellipsis-vertical"
-                size={18}
+                size={20}
                 color={COLORS.primary}
               />
             </MenuTrigger>
@@ -155,7 +165,7 @@ const DuaList = () => {
                           router.back();
                         },
                       },
-                    ]
+                    ],
                   )
                 }
                 text="Delete Category"
@@ -171,7 +181,6 @@ const DuaList = () => {
           showsVerticalScrollIndicator={false}
           numColumns={1}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.flatListStyle}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
             <View style={styles.addDua}>
@@ -184,7 +193,10 @@ const DuaList = () => {
 
       {bottomForm && (
         <BottomSheets setBottomForm={setBottomForm} categoryId={categoryId}>
-          <AppText weight="Bold" style={{ marginBottom: 30 }}>
+          <AppText
+            weight="Bold"
+            style={{ marginBottom: 30, color: COLORS.primary }}
+          >
             Create a new Dua
           </AppText>
           {/* Add your form fields here */}

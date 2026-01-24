@@ -22,13 +22,13 @@ const DisplaySingleDua = () => {
   const [editForm, setEditForm] = useState(false);
 
   const getPrayersForCategory = useCategoryStore(
-    (state) => state.getPrayersForCategory
+    (state) => state.getPrayersForCategory,
   );
 
   const deletePrayer = useCategoryStore((state) => state.deletePrayer);
 
   const updatePrayerCount = useCategoryStore(
-    (state) => state.updatePrayerCount
+    (state) => state.updatePrayerCount,
   );
 
   // ✅ Step 1: Find all prayers in the category of the current prayerId
@@ -123,7 +123,7 @@ const DisplaySingleDua = () => {
                                 router.back();
                               },
                             },
-                          ]
+                          ],
                         )
                       }
                       text="Delete Prayer"
@@ -145,9 +145,6 @@ const DisplaySingleDua = () => {
             {/* Arabic Text */}
             {prayer.arabicText && (
               <View style={styles.textSection}>
-                <AppText weight="Regular" style={styles.sectionLabel}>
-                  Arabic
-                </AppText>
                 <AppText style={styles.arabicText}>{prayer.arabicText}</AppText>
               </View>
             )}
@@ -155,9 +152,11 @@ const DisplaySingleDua = () => {
             {/* Transliteration */}
             {prayer.transliteration && (
               <View style={styles.textSection}>
-                <AppText weight="Regular" style={styles.sectionLabel}>
-                  Transliteration
-                </AppText>
+                <View style={styles.labelContainer}>
+                  <AppText weight="Regular" style={styles.sectionLabel}>
+                    Transliteration
+                  </AppText>
+                </View>
                 <AppText style={styles.transliteration}>
                   {prayer.transliteration}
                 </AppText>
@@ -167,9 +166,11 @@ const DisplaySingleDua = () => {
             {/* Translation */}
             {prayer.translation && (
               <View style={styles.textSection}>
-                <AppText weight="Regular" style={styles.sectionLabel}>
-                  Translation
-                </AppText>
+                <View style={styles.labelContainer}>
+                  <AppText weight="Regular" style={styles.sectionLabel}>
+                    Translation
+                  </AppText>
+                </View>
                 <AppText style={styles.translation}>
                   {prayer.translation}
                 </AppText>
